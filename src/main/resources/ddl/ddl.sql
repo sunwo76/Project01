@@ -23,3 +23,5 @@ create table `BOARD` (
  INDEX `FK_board_user` (`user_no`) USING BTREE,
  CONSTRAINT `FK_board_user` FOREIGN KEY (`user_no`) REFERENCES `user` (`user_no`) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+

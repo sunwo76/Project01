@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sql">
+  
+  <select id="findAll" resultType="HashMap">
+  	SELECT * FROM board where board_del = 0
+  </select>
+  
+  <select id="findOne" resultType="HashMap" parameterType="int">
+  	SELECT board_no, board_title, IFNULL(board_content, '') AS board_content,
+		   board_del, board_reg_date, board_up_date, user_no
+	  FROM board WHERE board_no = #{no}
+  </select>
+  
+  <select id="findUserID" resultType="int" parameterType="int">
+  	SELECT user_no
+	  FROM board
+	 WHERE board_no = #{no}
+  </select>
+  
+  <insert id="saveBoard" parameterType="HashMap">
+  	INSERT INTO board 
+  		(board_title, board_content, user_no)
+  	VALUE
+  		(#{board_title}, #{board_content}, #{user_no})
+  	<selectKey keyProperty="board_no" order="AFTER" resultType="Integer">
+  		SELECT LAST_INSERT_ID() as board_no
+  	</selectKey>
+  </insert>
+  
+  <update id="editBoard" parameterType="HashMap">
+  	UPDATE board SET board_title = #{board_title} , board_content = #{board_content} WHERE board_no = #{board_no}
+  </update>
+  
+  <update id="deleteBoard" parameterType="int">
+  	UPDATE board SET board_del = 1 WHERE board_no = #{board_no}
+  </update>
+  
+  <insert id="saveUser" parameterType="HashMap">
+  	INSERT INTO user (user_nm, user_id, user_pwd) VALUES (#{user_nm}, #{user_id}, #{user_pwd})
+  </insert>
+  
+  <select id="login" parameterType="HashMap" resultType="HashMap">
+  	SELECT * FROM user 
+  	 WHERE user_id = #{user_id} 
+  	   AND user_pwd = #{user_pwd}
+  </select>
+  
+</mapper>
